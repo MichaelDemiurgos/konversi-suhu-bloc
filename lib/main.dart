@@ -1,12 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:firebase_core/firebase_core.dart';
 
-// import relatif
 import 'bloc/temp_bloc.dart';
 import 'bloc/temp_event.dart';
 import 'bloc/temp_state.dart';
+import 'login_page.dart'; 
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(); 
   runApp(const MyApp());
 }
 
@@ -15,12 +18,14 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      // Pasang Provider di paling atas biar semua widget di bawahnya bisa akses BLoC
-      home: BlocProvider(
-        create: (context) => TempBloc(),
-        child: const KonversiSuhu(),
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider(create: (context) => TempBloc()),
+        
+      ],
+      child: MaterialApp(
+        debugShowCheckedModeBanner: false,
+        home: const LoginPage(), 
       ),
     );
   }
@@ -29,7 +34,6 @@ class MyApp extends StatelessWidget {
 class KonversiSuhu extends StatelessWidget {
   const KonversiSuhu({super.key});
 
-  // Logika tetep ditaruh di sini sebagai helper aja
   double _toCelsius(double v, String dari) => switch (dari) {
         'Fahrenheit' => (v - 32) * 5 / 9,
         'Kelvin' => v - 273.15,
@@ -53,7 +57,6 @@ class KonversiSuhu extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(title: const Text('Konversi Suhu BLoC'), centerTitle: true),
-      // BlocBuilder bakal nge-rebuild UI tiap ada perubahan state di BLoC
       body: BlocBuilder<TempBloc, TempState>(
         builder: (context, state) {
           final celsius = _toCelsius(state.input, state.dari);
@@ -71,7 +74,6 @@ class KonversiSuhu extends StatelessWidget {
                   ),
                   onChanged: (v) {
                     final val = double.tryParse(v) ?? 0;
-                    // Kirim event ke BLoC tiap kali user ngetik
                     context.read<TempBloc>().add(InputChanged(val));
                   },
                 ),
@@ -85,7 +87,6 @@ class KonversiSuhu extends StatelessWidget {
                   items: satuan
                       .map((s) => DropdownMenuItem(value: s, child: Text('$s ${_simbol(s)}')))
                       .toList(),
-                  // Kirim event ke BLoC pas unit diubah
                   onChanged: (v) => context.read<TempBloc>().add(UnitChanged(v!)),
                 ),
                 const SizedBox(height: 20),

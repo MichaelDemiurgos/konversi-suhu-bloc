@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "813251667903",
+    "project_id": "konversi-suhu-bloc",
+    "storage_bucket": "konversi-suhu-bloc.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:813251667903:android:577d4280b4c93a87c7a30a",
+        "android_client_info": {
+          "package_name": "com.example.tugas_2"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBtR_KxlctOB9EUEyjamGD4AR7fzJpTIZ0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
